@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Background Remover</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #imageUpload {
+      display: block;
+      width: 100%;
+      margin: 20px auto;
+    }
+
+    #removeBackground {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #imageContainer {
+      display: flex;
+      flex-direction: column; 
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    #originalImage, #processedImage {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      display: none; /* Initially hide the images */
+    }
+
+    #downloadButton {
+      display: none; 
+      padding: 10px 20px;
+      background-color: #008CBA;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Background Remover</h1>
+  <input type="file" id="imageUpload" accept="image/*">
+  <button id="removeBackground">Remove Background</button>
+  <div id="imageContainer">
+    <img id="originalImage" src="#" alt="Original Image"> 
+    <img id="processedImage" src="#" alt="Processed Image"> 
+    <button id="downloadButton">Download PNG</button> 
+  </div>
+  <script>
+    const imageUpload = document.getElementById('imageUpload');
+    const removeBackground = document.getElementById('removeBackground');
+    const originalImage = document.getElementById('originalImage');
+    const processedImage = document.getElementById('processedImage');
+    const downloadButton = document.getElementById('downloadButton');
+
+    removeBackground.addEventListener('click', () => {
+      const file = imageUpload.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          originalImage.src = e.target.result;
+          removeImageBackground(e.target.result);
+        }
+        reader.readAsDataURL(file);
+      } else {
+        alert("Please select an image.");
+      }
+    });
+
+    function removeImageBackground(imageData) {
+      const apiKey = "3147a2b2f8eaf3d75643b72648893db27fe64257cd48fbb9712c25d7f9a37996c21a8ccf5bb8bb07ec1557ddf52c2211"; 
+      const apiUrl = "https://clipdrop-api.co/remove-background/v1";
+
+      const formData = new FormData();
+      formData.append('image_file', dataURItoBlob(imageData), 'image.png'); 
+
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'X-Api-Key': apiKey,
+        },
+        body: formData,
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.blob(); 
+      })
+      .then((blob) => {
+        const imageUrl = URL.createObjectURL(blob);
+        processedImage.src = imageUrl;
+        // Show the images and download button after processing
+        originalImage.style.display = 'block'; 
+        processedImage.style.display = 'block'; 
+        downloadButton.style.display = 'block'; 
+      })
+      .catch((error) => {
+        console.error('Error removing background:', error);
+        alert('An error occurred while processing the image.');
+      });
+    }
+
+    function dataURItoBlob(dataURI) {
+      var byteString = atob(dataURI.split(',')[1]);
+      var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], {type: mimeString});
+    }
+
+    downloadButton.addEventListener('click', () => {
+      const processedImageSrc = processedImage.src;
+      const link = document.createElement('a');
+      link.href = processedImageSrc;
+      link.download = 'processed_image.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  </script>
+</body>
+</html>
