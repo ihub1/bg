@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Background Remover</title>
+  <title>LonyiDev BG Tool</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
@@ -14,12 +14,17 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      overflow: hidden; /* Disable scrollbar */
+      overflow: hidden; 
     }
 
     h1 {
       text-align: center;
       color: #333;
+      font-size: 1.8em;
+    }
+
+    h1 span { 
+      color: blue;
     }
 
     .container {
@@ -62,7 +67,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: auto;
+      width: auto; 
       padding: 15px 25px;
       background-color: #28a745;
       color: white;
@@ -120,8 +125,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 50px;
+      width: auto; /* Changed to auto */
       height: 50px;
+      padding: 0 15px; /* Added padding */
       background-color: #007bff;
       color: white;
       border: none;
@@ -136,6 +142,7 @@
 
     .icon-button i {
       font-size: 20px;
+      margin-right: 10px; /* Added margin */
     }
 
     .blur-image {
@@ -145,7 +152,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Background Remover</h1>
+    <h1>Lonyi<span>Dev</span> BG Tool</h1>
     <input type="file" id="imageUpload" accept="image/*">
     <label for="imageUpload" class="file-upload-label">
       <i class="fas fa-upload"></i> Choose Image
@@ -155,9 +162,9 @@
     </div>
     <div id="imageContainer">
       <img id="originalImage" src="#" alt="Original Image">
-      <img id="processedImage" src="#" alt="Processed Image" style="display: none;"> 
+      <img id="processedImage" src="#" alt="Processed Image" style="display: none;">
       <div id="downloadButton" class="icon-button">
-        <i class="fas fa-download"></i>
+        <i class="fas fa-download"></i> Download 
       </div>
     </div>
   </div>
@@ -246,7 +253,7 @@
     }
 
     downloadButton.addEventListener('click', () => {
-      const processedImageSrc = originalImage.src;
+      const processedImageSrc = originalImage.src; 
       const link = document.createElement('a');
       link.href = processedImageSrc;
       link.download = 'processed_image.png';
