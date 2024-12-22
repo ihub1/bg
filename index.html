@@ -2,38 +2,88 @@
 <html>
 <head>
   <title>Background Remover</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 20px;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden; /* Disable scrollbar */
     }
 
     h1 {
       text-align: center;
+      color: #333;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
     }
 
     #imageUpload {
-      display: block;
-      width: 100%;
-      margin: 20px auto;
+      display: none;
     }
 
-    #removeBackground {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
+    .file-upload-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: auto; 
+      padding: 15px 25px; 
+      background-color: #007bff;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .file-upload-label:hover {
+      background-color: #0056b3;
+    }
+
+    .file-upload-label i {
+      margin-right: 10px;
+    }
+
+    #removeBackground {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      padding: 15px 25px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    #removeBackground:hover {
+      background-color: #218838;
+    }
+
+    #removeBackground i {
+      margin-right: 10px;
     }
 
     #imageContainer {
       display: flex;
-      flex-direction: column; 
+      flex-direction: column;
       align-items: center;
       margin-top: 20px;
     }
@@ -42,67 +92,111 @@
       max-width: 100%;
       height: auto;
       margin-bottom: 20px;
-      display: none; 
+      display: none;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     #downloadButton {
-      display: none; 
+      display: none;
       padding: 10px 20px;
-      background-color: #008CBA;
+      background-color: #dc3545;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
-    #loadingIndicator {
-      display: none; 
-      width: 40px;
-      height: 40px;
-      margin: 20px auto;
-      border: 4px solid #f3f3f3; 
-      border-radius: 50%;
-      border-top: 4px solid #3498db; 
-      animation: spin 2s linear infinite;
+    #downloadButton:hover {
+      background-color: #c82333;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    #downloadButton i {
+      margin-right: 10px;
+    }
+
+    .icon-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .icon-button:hover {
+      background-color: #0056b3;
+    }
+
+    .icon-button i {
+      font-size: 20px;
+    }
+
+    .blur-image {
+      filter: blur(5px);
     }
   </style>
 </head>
 <body>
-  <h1>Background Remover</h1>
-  <input type="file" id="imageUpload" accept="image/*">
-  <button id="removeBackground">Remove Background</button>
-  <div id="imageContainer">
-    <div id="loadingIndicator"></div> 
-    <img id="originalImage" src="#" alt="Original Image"> 
-    <img id="processedImage" src="#" alt="Processed Image"> 
-    <button id="downloadButton">Download PNG</button> 
+  <div class="container">
+    <h1>Background Remover</h1>
+    <input type="file" id="imageUpload" accept="image/*">
+    <label for="imageUpload" class="file-upload-label">
+      <i class="fas fa-upload"></i> Choose Image
+    </label>
+    <div id="removeBackground" style="display: none;">
+      <i class="fas fa-eraser"></i> Remove Background
+    </div>
+    <div id="imageContainer">
+      <img id="originalImage" src="#" alt="Original Image">
+      <img id="processedImage" src="#" alt="Processed Image" style="display: none;"> 
+      <div id="downloadButton" class="icon-button">
+        <i class="fas fa-download"></i>
+      </div>
+    </div>
   </div>
+
   <script>
     const imageUpload = document.getElementById('imageUpload');
     const removeBackground = document.getElementById('removeBackground');
     const originalImage = document.getElementById('originalImage');
     const processedImage = document.getElementById('processedImage');
     const downloadButton = document.getElementById('downloadButton');
-    const loadingIndicator = document.getElementById('loadingIndicator'); 
+    const fileUploadLabel = document.querySelector('.file-upload-label');
+
+    imageUpload.addEventListener('change', () => {
+      const file = imageUpload.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          originalImage.src = e.target.result;
+          originalImage.style.display = 'block'; 
+
+          removeBackground.style.display = 'flex';
+          fileUploadLabel.style.display = 'none'; 
+        }
+        reader.readAsDataURL(file);
+      }
+    });
 
     removeBackground.addEventListener('click', () => {
       const file = imageUpload.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          originalImage.src = e.target.result;
+          originalImage.classList.add('blur-image');
           removeImageBackground(e.target.result);
         }
         reader.readAsDataURL(file);
       } else {
         alert("Please select an image.");
       }
-      loadingIndicator.style.display = 'block'; 
     });
 
     function removeImageBackground(imageData) {
@@ -110,7 +204,7 @@
       const apiUrl = "https://clipdrop-api.co/remove-background/v1";
 
       const formData = new FormData();
-      formData.append('image_file', dataURItoBlob(imageData), 'image.png'); 
+      formData.append('image_file', dataURItoBlob(imageData), 'image.png');
 
       fetch(apiUrl, {
         method: 'POST',
@@ -123,21 +217,20 @@
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.blob(); 
+        return response.blob();
       })
       .then((blob) => {
         const imageUrl = URL.createObjectURL(blob);
-        processedImage.src = imageUrl;
 
-        originalImage.style.display = 'block'; 
-        processedImage.style.display = 'block'; 
-        downloadButton.style.display = 'block'; 
-        loadingIndicator.style.display = 'none'; 
+        originalImage.src = imageUrl;
+        originalImage.classList.remove('blur-image');
+
+        downloadButton.style.display = 'flex';
       })
       .catch((error) => {
         console.error('Error removing background:', error);
         alert('An error occurred while processing the image.');
-        loadingIndicator.style.display = 'none'; 
+        originalImage.classList.remove('blur-image');
       });
     }
 
@@ -153,7 +246,7 @@
     }
 
     downloadButton.addEventListener('click', () => {
-      const processedImageSrc = processedImage.src;
+      const processedImageSrc = originalImage.src;
       const link = document.createElement('a');
       link.href = processedImageSrc;
       link.download = 'processed_image.png';
