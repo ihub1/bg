@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>LonyiDev BG Tool</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,7 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      overflow: hidden; 
+      overflow: hidden;
     }
 
     h1 {
@@ -22,8 +23,8 @@
       font-size: 1.8em;
     }
 
-    h1 span { 
-      color: #007bff; /* Blue color for "Dev" */
+    h1 span {
+      color: #007bff;
     }
 
     h1 .lonyi {
@@ -49,7 +50,7 @@
       display: block;
       margin: 0 auto;
       padding: 10px 20px;
-      background-color: #e7e7e7; 
+      background-color: #e7e7e7;
       color: #333;
       border: none;
       border-radius: 5px;
@@ -59,7 +60,7 @@
     }
 
     .file-upload-label:hover {
-      background-color: #d9d9d9; 
+      background-color: #d9d9d9;
     }
 
     .file-upload-label i {
@@ -67,20 +68,20 @@
     }
 
     #removeBackground {
-      display: block; 
-      margin: 0 auto; 
+      display: block;
+      margin: 0 auto;
       padding: 10px 20px;
-      background-color: #e7e7e7; 
-      color: #333; 
+      background-color: #e7e7e7;
+      color: #333;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-weight: bold; 
+      font-weight: bold;
       transition: background-color 0.3s ease;
     }
 
     #removeBackground:hover {
-      background-color: #d9d9d9; 
+      background-color: #d9d9d9;
     }
 
     #removeBackground i {
@@ -94,7 +95,8 @@
       margin-top: 20px;
     }
 
-    #originalImage, #processedImage {
+    #originalImage,
+    #processedImage {
       max-width: 100%;
       height: auto;
       margin-bottom: 20px;
@@ -104,8 +106,8 @@
     }
 
     #downloadButton {
-      display: none; 
-      margin: 0 auto; 
+      display: none;
+      margin: 0 auto;
       padding: 10px 20px;
       background-color: #e7e7e7;
       color: #333;
@@ -130,23 +132,23 @@
       justify-content: center;
       width: auto;
       height: 50px;
-      padding: 0 15px; 
-      background-color: #e7e7e7; 
-      color: #333; 
+      padding: 0 15px;
+      background-color: #e7e7e7;
+      color: #333;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-weight: bold; 
+      font-weight: bold;
       transition: background-color 0.3s ease;
     }
 
     .icon-button:hover {
-      background-color: #d9d9d9; 
+      background-color: #d9d9d9;
     }
 
     .icon-button i {
       font-size: 20px;
-      margin-right: 10px; 
+      margin-right: 10px;
     }
 
     .blur-image {
@@ -154,9 +156,10 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <h1><span class="lonyi">Lonyi</span><span>Dev</span> BG Tool</h1> 
+    <h1><span class="lonyi">Lonyi</span><span>Dev</span> BG Tool</h1>
     <input type="file" id="imageUpload" accept="image/*">
     <label for="imageUpload" class="file-upload-label">
       <i class="fas fa-upload"></i> Choose Image
@@ -168,7 +171,7 @@
       <img id="originalImage" src="#" alt="Original Image">
       <img id="processedImage" src="#" alt="Processed Image" style="display: none;">
       <div id="downloadButton" class="icon-button">
-        <i class="fas fa-download"></i> Download 
+        <i class="fas fa-download"></i> Download
       </div>
     </div>
   </div>
@@ -187,10 +190,10 @@
         const reader = new FileReader();
         reader.onload = (e) => {
           originalImage.src = e.target.result;
-          originalImage.style.display = 'block'; 
+          originalImage.style.display = 'block';
 
-          removeBackground.style.display = 'block'; 
-          fileUploadLabel.style.display = 'none'; 
+          removeBackground.style.display = 'block';
+          fileUploadLabel.style.display = 'none';
         }
         reader.readAsDataURL(file);
       }
@@ -211,38 +214,38 @@
     });
 
     function removeImageBackground(imageData) {
-      const apiKey = "3147a2b2f8eaf3d75643b72648893db27fe64257cd48fbb9712c25d7f9a37996c21a8ccf5bb8bb07ec1557ddf52c2211"; 
+      const apiKey = "3147a2b2f8eaf3d75643b72648893db27fe64257cd48fbb9712c25d7f9a37996c21a8ccf5bb8bb07ec1557ddf52c2211";
       const apiUrl = "https://clipdrop-api.co/remove-background/v1";
 
       const formData = new FormData();
       formData.append('image_file', dataURItoBlob(imageData), 'image.png');
 
       fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'X-Api-Key': apiKey,
-        },
-        body: formData,
-      })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        const imageUrl = URL.createObjectURL(blob);
+          method: 'POST',
+          headers: {
+            'X-Api-Key': apiKey,
+          },
+          body: formData,
+        })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.blob();
+        })
+        .then((blob) => {
+          const imageUrl = URL.createObjectURL(blob);
 
-        originalImage.src = imageUrl;
-        originalImage.classList.remove('blur-image');
+          originalImage.src = imageUrl;
+          originalImage.classList.remove('blur-image');
 
-        downloadButton.style.display = 'flex';
-      })
-      .catch((error) => {
-        console.error('Error removing background:', error);
-        alert('An error occurred while processing the image.');
-        originalImage.classList.remove('blur-image');
-      });
+          downloadButton.style.display = 'flex';
+        })
+        .catch((error) => {
+          console.error('Error removing background:', error);
+          alert('An error occurred while processing the image.');
+          originalImage.classList.remove('blur-image');
+        });
     }
 
     function dataURItoBlob(dataURI) {
@@ -257,7 +260,7 @@
     }
 
     downloadButton.addEventListener('click', () => {
-      const processedImageSrc = originalImage.src; 
+      const processedImageSrc = originalImage.src;
       const link = document.createElement('a');
       link.href = processedImageSrc;
       link.download = 'processed_image.png';
@@ -267,4 +270,5 @@
     });
   </script>
 </body>
+
 </html>
