@@ -19,12 +19,17 @@
 
     h1 {
       text-align: center;
-      color: #333;
       font-size: 1.8em;
     }
 
     h1 span { 
-      color: blue;
+      color: #007bff; /* Blue color for "Dev" */
+    }
+
+    h1 .lonyi {
+      background: -webkit-linear-gradient(left, #ff0000, #ffff00, #00ff00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .container {
@@ -99,18 +104,20 @@
     }
 
     #downloadButton {
-      display: none;
+      display: none; 
+      margin: 0 auto; 
       padding: 10px 20px;
-      background-color: #dc3545;
-      color: white;
+      background-color: #e7e7e7;
+      color: #333;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-weight: bold;
       transition: background-color 0.3s ease;
     }
 
     #downloadButton:hover {
-      background-color: #c82333;
+      background-color: #d9d9d9;
     }
 
     #downloadButton i {
@@ -124,16 +131,17 @@
       width: auto;
       height: 50px;
       padding: 0 15px; 
-      background-color: #007bff;
-      color: white;
+      background-color: #e7e7e7; 
+      color: #333; 
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-weight: bold; 
       transition: background-color 0.3s ease;
     }
 
     .icon-button:hover {
-      background-color: #0056b3;
+      background-color: #d9d9d9; 
     }
 
     .icon-button i {
@@ -148,7 +156,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Lonyi<span>Dev</span> BG Tool</h1>
+    <h1><span class="lonyi">Lonyi</span><span>Dev</span> BG Tool</h1> 
     <input type="file" id="imageUpload" accept="image/*">
     <label for="imageUpload" class="file-upload-label">
       <i class="fas fa-upload"></i> Choose Image
